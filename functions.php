@@ -12,6 +12,15 @@ if ( ! defined( '_GBC_VERSION' ) ) {
 	define( '_GBC_VERSION', '1.0.0' );
 }
 
+// location archives sorting
+add_action( 'pre_get_posts', 'locations_sort_order'); 
+function locations_sort_order($query){
+	if(is_post_type_archive('locations') || isset($query->query['location_types'])):
+	   $query->set( 'order', 'ASC' );
+	   $query->set( 'orderby', 'post_name' ); // rather than 'title' to account for titles that start w/ quote
+	endif;    
+};
+
 // simple helper for getting theme files 
 function gbc_theme_file($filename, $dir='images'){
 	return get_template_directory_uri().'/'.$dir.'/'.$filename;
@@ -19,7 +28,10 @@ function gbc_theme_file($filename, $dir='images'){
 
 // icon helper for sprite sheet
 function gbc_sprite($icon){
-	return '<svg class="sprite" viewBox="0 0 55 46.9"><use xlink:href="'.get_template_directory_uri().'/images/sprites.svg#'.$icon.'" /></svg>';
+	return '<svg aria-hidden="true" class="sprite" viewBox="0 0 55 46.9"><use xlink:href="'.get_template_directory_uri().'/images/sprites.svg#'.$icon.'" /></svg>';
+}
+function gbc_sprite_src($icon){
+	return get_template_directory_uri().'/images/sprites.svg#'.$icon;
 }
 
 function gbc_term_props($term, $prop='icon'){
@@ -52,6 +64,9 @@ function gbc_term_props($term, $prop='icon'){
 			'icon'=>'service-bell'
 		),
 		'lagoons-lakes-ponds-and-swimming-holes'=>array(
+			'icon'=>'buoy'
+		),
+		'lakes-and-ponds'=>array( // <== renamed
 			'icon'=>'buoy'
 		),
 		'miscellaneous-services'=>array(
@@ -100,18 +115,138 @@ function gbc_terms_list($html=null){
 		'taxonomy' => 'location_types',
 		'hide_empty'=>true,
 	));
-	$html .= '<ul id="terms-menu" class="gbc-side-menu">';
+	$html .= '<ul class="gbc-side-menu terms-menu">';
 	foreach($terms as $term){
 		if($term->slug == 'all-green-book-locations'){
 			continue;
 		}
 		$html .= '<li class="'.$term->slug.'" id="term_'.$term->term_id.'">';
-			$html .= '<a href="/location-type/'.$term->slug.'">';
+			$html .= '<a href="/location-type/'.$term->slug.'/">';
 				$html .= gbc_sprite(gbc_term_props($term->slug)).$term->name;
 			$html .= '</a>';
 		$html .= '</li>';
 	}
 	$html .= '</ul>';
+	return $html;
+}
+
+// primary term for the location post
+function gbc_get_post_term($id, $html = null){
+	$terms = get_the_terms($id,'location_types');
+	if(is_array($terms)){
+		foreach($terms as $term){
+			if($term->slug == 'all-green-book-locations'){
+				continue;
+			}
+			$html .= '<a class="gbc-location-type-for-post" aria-label="Filed under: '.$term->name.'" href="/location-type/'.$term->slug.'" class="'.$term->slug.'">';
+			$html .= gbc_sprite(gbc_term_props($term->slug)).$term->name;
+			$html .= '</a>';
+		}
+
+		return $html;
+	}
+}
+
+// color location-type blocks for homepage
+function gbc_term_blocks($html = null){
+	$terms = get_terms(array(
+		'taxonomy' => 'location_types',
+		'hide_empty'=>true,
+	));
+	$html .= '<h2><a href="/locations">'.gbc_sprite('location').'Location Types</a></h2>';
+	$html .= '<div id="type-blocks-container-home">';
+	foreach($terms as $term):
+		if($term->slug == 'all-green-book-locations'){
+			continue;
+		}
+		$href = '/location-type/'.$term->slug;
+		$sprite = gbc_sprite(gbc_term_props($term->slug));
+		$label = $term->name;
+		$html .= '<a class="location-type-block" href="'.$href.'">'.$sprite.'<h3>'.$label.'</h3></a>';
+	endforeach;
+	$html .= '</div>';
+	return $html;
+}
+// get n recent locations for homepage
+function gbc_posts_recent($num=12,$html=null){
+	$query = array(
+		'posts_per_page' => $num,
+		'post_status' => 'publish',
+		'post_type' => 'locations',
+		'meta_query' => array(array('key' => '_thumbnail_id')),
+		'orderby' => array( 'modified' => 'DESC' ),
+	);
+	$loop = new WP_Query( $query );
+	$html .= '<div class="type-container-home">';
+		$html .= '<h2><a href="/locations/">'.gbc_sprite('clock').'Recent Updates</a></h2>';
+		$html .= '<div class="articles-container-home">';
+		while ( $loop->have_posts() ) : $loop->the_post();
+			$html .= '<article class="post-location-item" style="--article-img:url('.get_the_post_thumbnail_url(get_the_ID(),'medium').');">';
+				$html .= '<header class="entry-header">';
+					$html .= '<div class="entry-header-inner">';
+						$html .= '<h3 class="entry-title-home"><a href="' . esc_url( get_permalink() ) . '" rel="bookmark">'.get_the_title().'</a></h3>';
+					$html .= '</div>';
+				$html .= '</header>';
+			$html .= '</article>';
+		endwhile;
+		$html .= '</div>';
+	$html .= '</div>';
+	wp_reset_postdata();
+	return $html;
+}
+// get n locations per type for homepage (unused but keeping it around)
+function gbc_posts_per_term($num=4,$html=null){	
+	$terms = get_terms(array(
+		'taxonomy' => 'location_types',
+		'hide_empty'=>true,
+	));
+	foreach($terms as $term):
+		if($term->slug == 'all-green-book-locations'){
+			continue;
+		}
+		$query = array(
+			'posts_per_page' => $num,
+			'post_status'   => 'publish',
+			'post_type' => 'locations',
+			'tax_query' => array(
+				array(
+				'taxonomy' => 'location_types',
+				'field' => 'slug',
+				'terms' => array ($term->slug)
+				)
+			), // sort by has thumbnail
+			'meta_query'  => array(
+				'relation' => 'OR',
+					array(
+					'key'     => '_thumbnail_id',
+					'compare' => 'NOT EXISTS',
+					),
+					array(
+					'key'     => '_thumbnail_id',
+					'compare' => 'EXISTS',
+					)
+			),
+			'orderby'   => array( 'meta_value_num' => 'DESC' ),
+		);
+		$loop = new WP_Query( $query );
+		$term_heading = '<a href="/location-type/'.$term->slug.'">'.gbc_sprite(gbc_term_props($term->slug)).$term->name.'</a>';
+		$html .= '<div class="type-container-home '.$term->slug.'">';
+		$html .= '<h2>'.$term_heading.'</h2>';
+		$html .= '<div class="articles-container-home '.$term->slug.'">';
+		while ( $loop->have_posts() ) : $loop->the_post();
+			$html .= '<article class="home-location" style="--article-img:url('.get_the_post_thumbnail_url(get_the_ID(),'medium').');">';
+				$html .= '<header class="entry-header">';
+					$html .= '<div class="entry-header-inner">';
+						$html .= '<h3 class="entry-title-home"><a href="' . esc_url( get_permalink() ) . '" rel="bookmark">'.get_the_title().'</a></h3>';
+					$html .= '</div>';
+				$html .= '</header>';
+			$html .= '</article>';
+		endwhile;
+		$html .= '</div>';
+		$html.='<a class="button" href="/location-type/'.$term->slug.'">Browse '.$term->name.'</a>';
+		$html .= '</div>';
+	endforeach;
+	wp_reset_postdata();
 	return $html;
 }
 
@@ -152,7 +287,8 @@ function gbc_underscores_setup() {
 	// This theme uses wp_nav_menu() in one location.
 	register_nav_menus(
 		array(
-			'menu-1' => esc_html__( 'Primary', 'gbc-underscores' ),
+			'menu-1' => esc_html__( 'Partial (Header)', 'gbc-underscores' ),
+			'menu-2' => esc_html__( 'Full (Menu)', 'gbc-underscores' ),
 		)
 	);
 
@@ -279,3 +415,5 @@ if ( defined( 'JETPACK__VERSION' ) ) {
 	require get_template_directory() . '/inc/jetpack.php';
 }
 
+add_theme_support( 'align-wide' );
+add_theme_support( 'align-full' );

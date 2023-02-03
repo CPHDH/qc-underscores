@@ -41,10 +41,15 @@ if ( ! function_exists( 'gbc_underscores_posted_by' ) ) :
 	 * Prints HTML with meta information for the current author.
 	 */
 	function gbc_underscores_posted_by() {
+		$multiple_authors = get_post_custom_values('multiple_authors', 'ID' );
+		$authname = $multiple_authors ? $multiple_authors[0] : get_the_author();
+		$authhref = !$multiple_authors ? esc_url( get_author_posts_url( get_the_author_meta( 'ID' ) ) ) : 'https://csudigitalhumanities.org/';
+		
+		
 		$byline = sprintf(
 			/* translators: %s: post author. */
 			esc_html_x( 'by %s', 'post author', 'gbc-underscores' ),
-			'<span class="author vcard"><a class="url fn n" href="' . esc_url( get_author_posts_url( get_the_author_meta( 'ID' ) ) ) . '">' . esc_html( get_the_author() ) . '</a></span>'
+			'<span class="author vcard"><a class="url fn n" href="' . esc_url( $authhref ) . '">' . esc_html( $authname ) . '</a></span>'
 		);
 
 		echo '<span class="byline"> ' . $byline . '</span>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
@@ -120,19 +125,19 @@ if ( ! function_exists( 'gbc_underscores_post_thumbnail' ) ) :
 	 * element when on single views.
 	 */
 	function gbc_underscores_post_thumbnail() {
-		if ( post_password_required() || is_attachment() || ! has_post_thumbnail() ) {
+		if ( post_password_required() || is_attachment()  ) {
 			return;
 		}
 
-		if ( is_singular() ) :
+		if ( is_singular() && has_post_thumbnail() ) :
 			?>
 
 			<div class="post-thumbnail">
 				<?php the_post_thumbnail(); ?>
 			</div><!-- .post-thumbnail -->
 
-		<?php else : ?>
-
+		<?php elseif(has_post_thumbnail()) : ?>
+		
 			<a class="post-thumbnail" href="<?php the_permalink(); ?>" aria-hidden="true" tabindex="-1">
 				<?php
 					the_post_thumbnail(
@@ -147,9 +152,26 @@ if ( ! function_exists( 'gbc_underscores_post_thumbnail' ) ) :
 					);
 				?>
 			</a>
-
-			<?php
-		endif; // End is_singular().
+			
+		<?php else:?>
+			<!-- location type archive -->
+			<?php if(isset(get_queried_object()->slug)):?>
+				<?php $svg_src = gbc_sprite_src(gbc_term_props(get_queried_object()->slug));?>
+				<span class="gbc-mask-container"><a class="post-thumbnail gbc-mask-svg" style="mask-image: url(<?php echo $svg_src;?>)" href="<?php the_permalink(); ?>" aria-hidden="true" tabindex="-1">
+				</a></span>
+			<!-- all locations archive -->
+			<?php else:?>
+				<?php 
+				$post = get_post();
+				$terms = get_the_terms($post, 'location_types');
+				$term = is_array($terms) ? end($terms) : null; // last in array
+				$slug = isset($term) && isset($term->slug) ? $term->slug : 'default';
+				$svg_src = gbc_sprite_src(gbc_term_props($slug));
+				?>
+				<span class="gbc-mask-container"><a class="post-thumbnail gbc-mask-svg" style="mask-image: url(<?php echo $svg_src;?>)" href="<?php the_permalink(); ?>" aria-hidden="true" tabindex="-1">
+				</a></span>
+			<?php endif;?>
+		<?php endif; // End is_singular().
 	}
 endif;
 

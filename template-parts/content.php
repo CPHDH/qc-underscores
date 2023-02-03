@@ -8,28 +8,35 @@
  */
 
 ?>
-
+<div id="article-actions">
+	<span>
+		<a class="twitter" aria-label="Share article on Twitter" href="https://twitter.com/intent/tweet?text=<?php echo esc_url( get_permalink() );?>" rel="noopener"><?php echo gbc_sprite('twitter');?></a>
+		<a class="facebook" aria-label="Share article on Facebook" href="https://www.facebook.com/sharer/sharer.php?u=<?php echo esc_url( get_permalink() );?>" rel="noopener"><?php echo gbc_sprite('facebook');?></a>
+		<a class="email" aria-label="Share article via email" href="mailto:?subject=<?php the_title();?>&body=<?php echo esc_url( get_permalink() );?>" rel="noopener"><?php echo gbc_sprite('email');?></a>
+		<a class="print" aria-label="Print this page" href="javascript:void" rel="noopener" onclick="window.print();"><?php echo gbc_sprite('print');?></a>
+	</span>
+</div>
 <article id="post-<?php the_ID(); ?>" <?php post_class(); ?>>
-	<header class="entry-header">
+	<?php $img = get_the_post_thumbnail_url(get_the_ID(),'medium') ? get_the_post_thumbnail_url(get_the_ID(),'medium') : gbc_theme_file('icon@2x.png');?>
+	<header class="entry-header" style="--article-img:url(<?php echo $img;?>);">
+
+		<div class="entry-header-inner">
 		<?php
+		echo gbc_get_post_term(get_the_ID());
 		if ( is_singular() ) :
 			the_title( '<h1 class="entry-title">', '</h1>' );
 		else :
 			the_title( '<h2 class="entry-title"><a href="' . esc_url( get_permalink() ) . '" rel="bookmark">', '</a></h2>' );
 		endif;
 
-		if ( 'post' === get_post_type() ) :
 			?>
-			<div class="entry-meta">
-				<?php
-				gbc_underscores_posted_on();
-				gbc_underscores_posted_by();
-				?>
-			</div><!-- .entry-meta -->
-		<?php endif; ?>
+		<div class="entry-meta">
+			<?php
+			gbc_underscores_posted_by();
+			?>
+		</div><!-- .entry-meta -->
+		</div><!-- .entry-header-inner -->
 	</header><!-- .entry-header -->
-
-	<?php // gbc_underscores_post_thumbnail(); ?>
 
 	<div class="entry-content">
 		<?php
@@ -57,7 +64,7 @@
 		?>
 	</div><!-- .entry-content -->
 
-	<footer class="entry-footer">
+	<!-- <footer class="entry-footer">
 		<?php gbc_underscores_entry_footer(); ?>
-	</footer><!-- .entry-footer -->
+	</footer>-->
 </article><!-- #post-<?php the_ID(); ?> -->

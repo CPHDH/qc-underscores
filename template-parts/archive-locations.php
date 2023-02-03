@@ -1,6 +1,6 @@
 <?php
 /**
- * Template part for displaying results in search pages
+ * Template part for displaying locations archive
  *
  * @link https://developer.wordpress.org/themes/basics/template-hierarchy/
  *
@@ -8,7 +8,6 @@
  */
 
 ?>
-
 <article class="post-location-item" style="--article-img:url(<?php echo get_the_post_thumbnail_url(get_the_ID(),'medium');?>);">
 	<header class="entry-header">
 		<div class="entry-header-inner">

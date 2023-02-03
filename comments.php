@@ -19,6 +19,13 @@ if ( post_password_required() ) {
 	return;
 }
 ?>
+<?php if(comments_open()):?>
+<div id="gbc-comment-prompt">
+	<h2><?php echo gbc_sprite('comments');?>Tell us about <?php echo get_the_title();?></h2>
+	<p>Many of the locations documented on Green Book Cleveland are not well-documented in the historical record. If you have additional information about <?php echo get_the_title();?>, please let us know by sharing a memory, correction, or suggestion using the comment form below.</p>
+	<p><em>Or send an email to <a href="mailto:info@greenbookcleveland.org?subject=Green%20Book%20Cleveland:%20<?php echo str_replace(' ', '%20', get_the_title());?>&body=%0A<?php echo get_the_permalink();?>">info@greenbookcleveland.org</a>.</em></p>
+</div>
+<?php endif;?>
 
 <div id="comments" class="comments-area">
 
@@ -70,7 +77,9 @@ if ( post_password_required() ) {
 		endif;
 
 	endif; // Check for have_comments().
-
+	?>
+	
+	<?php
 	comment_form();
 	?>
 

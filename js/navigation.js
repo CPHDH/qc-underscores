@@ -1,99 +1,104 @@
 /**
  * File navigation.js.
- *
- * Handles toggling the navigation menu for small screens and enables TAB key
- * navigation support for dropdown menus.
  */
-( function() {
-	const siteNavigation = document.getElementById( 'site-navigation' );
+(function () {
+  // function: set body class
+  let toggleMenuActive = (body, megamenu) => {
+    megamenu.classList.toggle("active");
+    body.classList.toggle("megamenu-active");
+  };
+  // function: toggle the menu button attributes
+  let toggleButtonExpanded = (button) => {
+    button.setAttribute(
+      "aria-expanded",
+      button.getAttribute("aria-expanded") == "true" ? "false" : "true"
+    );
+  };
+  // function: trap focus -- works everywhere except Firefox
+  let toggleInert = (lockable) => {
+    lockable.forEach((el) => {
+      el.toggleAttribute("inert");
+    });
+  };
+  // function: set search focus on open
+  let setFocus = (where) => {
+    if (where == "search") {
+      setTimeout(() => {
+        // timeout accounts for animation
+        document.querySelector("#megamenu .search-form input").focus();
+      }, 500);
+    } else if (where == "menu_button") {
+      document.querySelector("#masthead #menu").focus();
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+  };
+  // function: close on escape key
+  let escapeKeyCloseEvent = (body, megamenu, button, lockable) => {
+    document.onkeydown = (k) => {
+      k = k || window.event;
+      var _esc = false;
+      if ("key" in k) {
+        _esc = k.key === "Escape" || k.key === "Esc";
+      } else {
+        _esc = k.keyCode === 27;
+      }
+      if (_esc && megamenu.classList.contains("active")) {
+        toggleMenu(body, megamenu, button, lockable);
+        setFocus("menu_button");
+      }
+    };
+  };
+  // function: close when click off-menu
+  let offClickCloseEvent = (body, megamenu, button, lockable) => {
+    document.querySelector("#megamenu-overlay").addEventListener(
+      "click",
+      () => {
+        if (megamenu.classList.contains("active")) {
+          toggleMenu(body, megamenu, button, lockable);
+        }
+      },
+      { once: true }
+    );
+  };
+  // function: main menu toggle
+  let toggleMenu = (body, megamenu, button, lockable) => {
+    toggleMenuActive(body, megamenu);
+    toggleButtonExpanded(button);
+    toggleInert(lockable);
+    if (megamenu.classList.contains("active")) {
+      setFocus("search");
+      escapeKeyCloseEvent(body, megamenu, button, lockable);
+      offClickCloseEvent(body, megamenu, button, lockable);
+    }
+  };
 
-	// Return early if the navigation doesn't exist.
-	if ( ! siteNavigation ) {
-		return;
-	}
+  // click to init menu
+  document.querySelector("#masthead #menu").addEventListener("click", (e) => {
+    let megamenu = document.querySelector("#megamenu");
+    let body = document.querySelector("body");
+    let button = e.currentTarget;
+    let lockable = document.querySelectorAll("#primary-container, #colophon"); // these will be made inert when menu is active to trap focus
+    toggleMenu(body, megamenu, button, lockable);
+  });
 
-	const button = siteNavigation.getElementsByTagName( 'button' )[ 0 ];
-
-	// Return early if the button doesn't exist.
-	if ( 'undefined' === typeof button ) {
-		return;
-	}
-
-	const menu = siteNavigation.getElementsByTagName( 'ul' )[ 0 ];
-
-	// Hide menu toggle button if menu is empty and return early.
-	if ( 'undefined' === typeof menu ) {
-		button.style.display = 'none';
-		return;
-	}
-
-	if ( ! menu.classList.contains( 'nav-menu' ) ) {
-		menu.classList.add( 'nav-menu' );
-	}
-
-	// Toggle the .toggled class and the aria-expanded value each time the button is clicked.
-	button.addEventListener( 'click', function() {
-		siteNavigation.classList.toggle( 'toggled' );
-
-		if ( button.getAttribute( 'aria-expanded' ) === 'true' ) {
-			button.setAttribute( 'aria-expanded', 'false' );
-		} else {
-			button.setAttribute( 'aria-expanded', 'true' );
-		}
-	} );
-
-	// Remove the .toggled class and set aria-expanded to false when the user clicks outside the navigation.
-	document.addEventListener( 'click', function( event ) {
-		const isClickInside = siteNavigation.contains( event.target );
-
-		if ( ! isClickInside ) {
-			siteNavigation.classList.remove( 'toggled' );
-			button.setAttribute( 'aria-expanded', 'false' );
-		}
-	} );
-
-	// Get all the link elements within the menu.
-	const links = menu.getElementsByTagName( 'a' );
-
-	// Get all the link elements with children within the menu.
-	const linksWithChildren = menu.querySelectorAll( '.menu-item-has-children > a, .page_item_has_children > a' );
-
-	// Toggle focus each time a menu link is focused or blurred.
-	for ( const link of links ) {
-		link.addEventListener( 'focus', toggleFocus, true );
-		link.addEventListener( 'blur', toggleFocus, true );
-	}
-
-	// Toggle focus each time a menu link with children receive a touch event.
-	for ( const link of linksWithChildren ) {
-		link.addEventListener( 'touchstart', toggleFocus, false );
-	}
-
-	/**
-	 * Sets or removes .focus class on an element.
-	 */
-	function toggleFocus() {
-		if ( event.type === 'focus' || event.type === 'blur' ) {
-			let self = this;
-			// Move up through the ancestors of the current link until we hit .nav-menu.
-			while ( ! self.classList.contains( 'nav-menu' ) ) {
-				// On li elements toggle the class .focus.
-				if ( 'li' === self.tagName.toLowerCase() ) {
-					self.classList.toggle( 'focus' );
-				}
-				self = self.parentNode;
-			}
-		}
-
-		if ( event.type === 'touchstart' ) {
-			const menuItem = this.parentNode;
-			event.preventDefault();
-			for ( const link of menuItem.parentNode.children ) {
-				if ( menuItem !== link ) {
-					link.classList.remove( 'focus' );
-				}
-			}
-			menuItem.classList.toggle( 'focus' );
-		}
-	}
-}() );
+  // set aria-current for location type link on location-type archive
+  let slugs = window.location.pathname.split("/");
+  if (slugs.length >= 2 && slugs[1] == "location-type") {
+    let path = "/" + slugs[1] + "/" + slugs[2] + "/";
+    let type_links = document.querySelectorAll(
+      '.terms-menu a[href="' + path + '"]'
+    );
+    if (type_links.length) {
+      type_links.forEach((type) => {
+        type.setAttribute("aria-current", "page");
+      });
+    }
+  }
+  // focus on inline search when 404 or no search results
+  let try_search = document.querySelectorAll(
+    ".search-no-results .page-content .search-form input,.error404 .page-content .search-form input"
+  );
+  if (try_search.length) {
+    try_search[0].focus();
+  }
+})();
