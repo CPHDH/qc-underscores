@@ -1,9 +1,9 @@
 /*!
-Theme Name: GBC Underscores
-Theme URI: https://greenbookcleveland.placinghistory.org/
+Theme Name: Green Book Cleveland
+Theme URI: https://greenbookcleveland.org/
 Author: CSU Center for Public History + Digital Humanities
-Author URI: https://greenbookcleveland.placinghistory.org/
-Description: Theme for Green Book Cleveland. Built with _s (Underscores)
+Author URI: https://csudigitalhumanities.org/
+Description: Theme for Green Book Cleveland. Built with _s (Underscores).
 Version: 1.0.0
 Tested up to: 5.4
 Requires PHP: 5.6
@@ -764,6 +764,10 @@ textarea {
   display: block;
 }
 
+body #respond .comment-form-fields div.comment-form-input input {
+  font-size: 1em !important;
+}
+
 /* Widgets
 --------------------------------------------- */
 .widget {
@@ -1036,6 +1040,7 @@ header,
 #gbc-top-bar,
 .leaflet-control-layers-list,
 .button,
+.wp-element-button,
 .entry-title-home,
 .location-type-block h3,
 #homepage-hero-cta h3,
@@ -1137,21 +1142,26 @@ header a {
   background: var(--greenearth);
   transition: all 0.25s linear;
 }
-.terms-menu a[aria-current],
+.terms-menu a[aria-current] {
+  color: var(--dark);
+  background: var(--light);
+}
 .terms-menu a:hover,
 .terms-menu a:focus,
 .gbc-location-type-for-post:hover,
 .gbc-location-type-for-post:focus {
-  color: var(--greenearth);
-  background: var(--dark);
+  color: var(--greenearth) !important;
+  background: var(--dark) !important;
 }
-.terms-menu a[aria-current] .sprite,
+.terms-menu a[aria-current] .sprite {
+}
 .terms-menu a:hover .sprite,
 .terms-menu a:focus .sprite,
 .gbc-location-type-for-post:hover .sprite,
 .gbc-location-type-for-post:focus .sprite {
-  color: var(--bright);
+  color: var(--bright) !important;
 }
+
 #gbc-top-bar {
   display: flex;
   flex-direction: row;
@@ -1284,6 +1294,7 @@ a.gbc-location-type-for-post,
 .site #secondary,
 #gbc-comment-prompt,
 .button,
+.wp-element-button,
 .post-location-item,
 .post-location-item:before,
 .single article header,
@@ -1303,7 +1314,8 @@ a.gbc-location-type-for-post,
 }
 /* Buttons: 
 --------------------------------------------- */
-.button {
+.button,
+.wp-element-button {
   padding: 0.25em 1em;
   background: var(--dark);
   color: var(--body);
@@ -1311,16 +1323,27 @@ a.gbc-location-type-for-post,
   display: inline-block;
   margin-top: 1em;
   border: 1px solid transparent;
+  text-decoration: none !important;
   transition: all 0.15s linear;
 }
 .button .sprite {
   width: 2em;
   color: var(--body);
 }
+.wp-element-button:hover,
+.wp-element-button:focus,
 .button:hover,
 .button:focus {
   background: var(--deep);
   border: 1px solid var(--light);
+  color: var(--body);
+}
+.wp-block-group__inner-container .wp-element-button {
+  margin-top: 0;
+  margin-bottom: 1em;
+}
+.wp-block-group__inner-container p {
+  margin-bottom: 0.5em;
 }
 
 /* Homepage template: 
@@ -1624,6 +1647,7 @@ body.page-template-homepage .site #primary,
   padding: 0px 10px;
   display: inline-block;
   margin: 5px 5px 0 0;
+  text-decoration: none !important;
 }
 .tag-cloud-link:hover,
 .tag-cloud-link:focus {
@@ -1636,6 +1660,15 @@ body.page-template-homepage .site #primary,
 .tag-cloud-link:hover .tag-link-count,
 .tag-cloud-link:focus .tag-link-count {
   color: var(--soft);
+}
+section.post_tags {
+  text-align: center;
+}
+
+/* No Byline on select pages
+--------------------------------------------- */
+.page-id-3727 .byline {
+  display: none;
 }
 
 /* Grid / Layout
@@ -1872,7 +1905,22 @@ a#menu,
 .single article .entry-content {
   margin-top: 0;
 }
-
+.single article .entry-content hr,
+.single article .entry-content .wp-block-separator {
+  max-width: 50%;
+  border: 0 none transparent;
+  height: 4px;
+  background: linear-gradient(
+    65deg,
+    transparent 0 2%,
+    var(--soft) 2% 98%,
+    transparent 98% 100%
+  );
+}
+#jp-relatedposts,
+.jp-relatedposts {
+  margin: 0 auto !important;
+}
 #article-actions {
   font-size: 1em;
   position: absolute;
@@ -2041,17 +2089,23 @@ header#masthead,
   padding-right: 10px;
   margin: 0 5px 5px 0;
 }
-#megamenu-types ul li a[aria-current],
+#megamenu-types ul li a[aria-current] {
+  background: rgba(var(--light-rgb), 0.85);
+  color: var(--dark);
+}
+#megamenu-types ul li a[aria-current] .sprite {
+}
 #megamenu-types ul li a:hover,
 #megamenu-types ul li a:focus {
-  background: var(--deep);
-  color: var(--body);
+  background: var(--deep) !important;
+  color: var(--body) !important;
 }
-#megamenu-types ul li a[aria-current] .sprite,
+
 #megamenu a:hover .sprite,
 #megamenu a:focus .sprite {
-  color: var(--soft);
+  color: var(--soft) !important;
 }
+
 #megamenu-nav {
   flex-shrink: 0;
   margin-right: 3em;

@@ -58,7 +58,7 @@ get_header();
 				<h3>Share your story</h3>
 				<p>In partnership with the <a href="https://csudigitalhumanities.org/">Center for Public History + Digital Humanities</a> at Cleveland State University and the <a href="https://www.nps.gov/cuva/index.htm">Cuyahoga Valley National Park</a>, the Green Book Cleveland Collaborative is collecting oral histories, gathering newspaper accounts, and scanning old photos to share on this website. If you have a story to tell, we want to hear from you!</p><p>Use the contact form or send us an email at:<br><a href="mailto:info@greenbookcleveland.org?subject=Green%20Book%20Cleveland">info@greenbookcleveland.org</a></p>
 			</div>
-			<?php echo do_shortcode('[contact-form-7 id="4840" title="Contact form 1"]');?>
+			<?php echo do_shortcode('[contact-form-7 id="3369" title="Contact form 1"]');?>
 		</div>
 	</section>
 

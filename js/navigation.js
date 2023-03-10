@@ -26,6 +26,7 @@
       setTimeout(() => {
         // timeout accounts for animation
         document.querySelector("#megamenu .search-form input").focus();
+        document.querySelector("#megamenu .search-form input").select();
       }, 500);
     } else if (where == "menu_button") {
       document.querySelector("#masthead #menu").focus();

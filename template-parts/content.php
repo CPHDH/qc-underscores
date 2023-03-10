@@ -62,6 +62,20 @@
 			)
 		);
 		?>
+		<?php 
+		$tags = wp_get_post_tags(get_the_ID());
+		if(count($tags)){
+			$html = '<section class="post_tags" aria-label="Source Tags">';
+			$html .= '<hr>';
+			foreach($tags as $tag){
+				$tag_link = get_tag_link( $tag->term_id );
+				$html .= "<a href='{$tag_link}' title='Source Tag: {$tag->name}' class='{$tag->slug} tag-cloud-link'>";
+				$html .= "{$tag->name}</a> ";
+			}
+			$html .= '</section>';
+			echo $html;
+		}
+		?>
 	</div><!-- .entry-content -->
 
 	<!-- <footer class="entry-footer">

@@ -36,7 +36,7 @@
 	<header id="masthead" class="site-header">
 		<div class="site-branding">
 			<?php
-			echo '<a class="gbc-brand site-title" href="'.esc_url( home_url( '/' ) ).'" title="'.get_option('blogname').'" rel="home"><img src="'.gbc_theme_file('text-alt.png').'" alt="'.get_option('blogname').'"></a>';
+			echo '<a class="gbc-brand site-title" href="'.esc_url( home_url( '/' ) ).'" aria-label="'.get_option('blogname').' logo" rel="home"><img src="'.gbc_theme_file('text-alt.png').'" alt="'.get_option('blogname').'"></a>';
 			?>
 		</div><!-- .site-branding -->
 		<?php 
