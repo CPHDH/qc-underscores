@@ -101,5 +101,6 @@
   );
   if (try_search.length) {
     try_search[0].focus();
+    try_search[0].select();
   }
 })();

@@ -81,9 +81,9 @@ function gbc_term_props($term, $prop='icon'){
 			'icon'=>'service-bell'
 		),
 		'lagoons-lakes-ponds-and-swimming-holes'=>array(
-			'icon'=>'buoy'
+			'icon'=>'buoy' // <== old slug
 		),
-		'lakes-and-ponds'=>array( // <== renamed
+		'lagoons-lakes-and-ponds'=>array( // <== new slug
 			'icon'=>'buoy'
 		),
 		'miscellaneous-services'=>array(
