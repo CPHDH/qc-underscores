@@ -32,7 +32,7 @@ add_action(
 // location archives sorting
 add_action( 'pre_get_posts', 'locations_sort_order'); 
 function locations_sort_order($query){
-	if(is_post_type_archive('locations') || isset($query->query['location_types'])):
+	if(is_post_type_archive('locations') || isset($query->query['location_types']) || is_tag()):
 	   $query->set( 'order', 'ASC' );
 	   $query->set( 'orderby', 'post_name' ); // rather than 'title' to account for titles that start w/ quote
 	endif;    
