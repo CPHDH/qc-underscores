@@ -12,6 +12,12 @@ if ( ! defined( '_GBC_VERSION' ) ) {
 	define( '_GBC_VERSION', '1.0.0' );
 }
 
+/* Disable autosave */
+add_action( 'admin_init', 'disable_autosave' );
+function disable_autosave() {
+	wp_deregister_script( 'autosave' );
+}
+
 /**
  * Remove Jetpack's External Media feature.
  * https://jeremy.hu/jetpack-remove-external-media-block-editor/
