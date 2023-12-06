@@ -43,7 +43,7 @@ if ( ! function_exists( 'gbc_underscores_posted_by' ) ) :
 	function gbc_underscores_posted_by() {
 		$multiple_authors = get_post_custom_values('multiple_authors', 'ID' );
 		$authname = $multiple_authors ? $multiple_authors[0] : get_the_author();
-		$authhref = !$multiple_authors ? esc_url( get_author_posts_url( get_the_author_meta( 'ID' ) ) ) : 'https://csudigitalhumanities.org/';
+		$authhref = !$multiple_authors ? esc_url( get_author_posts_url( get_the_author_meta( 'ID' ) ) ) : '/author/gbc-team/';
 		
 		
 		$byline = sprintf(
