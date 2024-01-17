@@ -4,12 +4,11 @@
  *
  * @link https://developer.wordpress.org/themes/basics/template-hierarchy/
  *
- * @package GBC_Underscores
+ * @package QC_Underscores
  */
 
 get_header();
 ?>
-
 	<main id="primary" class="site-main">
 
 		<?php if ( have_posts() ) : ?>
@@ -20,21 +19,21 @@ get_header();
 				the_archive_description( '<div class="archive-description">', '</div>' );
 				?>
 			</header><!-- .page-header -->
-			
-			<div id="gbc-archive-items">
+
+			<div id="qc-archive-items">
 				<?php while ( have_posts() ) : ?>
 					<?php the_post(); ?>
 						<?php get_template_part( 'template-parts/archive', get_post_type() );?>
 				<?php endwhile;?>
 			</div>
 			<?php the_posts_navigation(array('prev_text'=>'Next','next_text'=>'Previous'));?>
-			
+
 		<?php else :
 			get_template_part( 'template-parts/content', 'none' );
 		endif; ?>
-			
+
 	</main><!-- #main -->
 
 <?php
-get_sidebar();
+//get_sidebar();
 get_footer();

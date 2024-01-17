@@ -1,15 +1,15 @@
 <?php
 /**
- * GBC Underscores functions and definitions
+ * QC Underscores functions and definitions
  *
  * @link https://developer.wordpress.org/themes/basics/theme-functions/
  *
- * @package GBC_Underscores
+ * @package QC_Underscores
  */
 
-if ( ! defined( '_GBC_VERSION' ) ) {
+if ( ! defined( '_QC_VERSION' ) ) {
 	// Replace the version number of the theme on each release.
-	define( '_GBC_VERSION', '1.0.0' );
+	define( '_QC_VERSION', '1.0.0' );
 }
 
 /* Disable autosave */
@@ -45,82 +45,51 @@ function locations_sort_order($query){
 };
 
 // simple helper for getting theme files 
-function gbc_theme_file($filename, $dir='images'){
+function qc_theme_file($filename, $dir='images'){
 	return get_template_directory_uri().'/'.$dir.'/'.$filename;
 }
 
 // icon helper for sprite sheet
-function gbc_sprite($icon){
-	return '<svg aria-hidden="true" class="sprite" viewBox="0 0 55 46.9"><use xlink:href="'.get_template_directory_uri().'/images/sprites.svg#'.$icon.'" /></svg>';
+function qc_sprite($icon){
+	return '<svg aria-hidden="true" class="sprite" viewBox="0 0 55 55"><use xlink:href="'.get_template_directory_uri().'/images/sprites.svg#'.$icon.'" /></svg>';
 }
-function gbc_sprite_src($icon){
+function qc_sprite_src($icon){
 	return get_template_directory_uri().'/images/sprites.svg#'.$icon;
 }
-
-function gbc_term_props($term, $prop='icon'){
+function qc_logo(){
+	return file_get_contents(get_template_directory_uri().'/images/icon.svg');
+}
+function qc_term_props($term, $prop='icon'){
 	if(!$term){
 		exit;
 	}
 	$slugs = array(
-		'amusement-parks'=>array(
-			'icon'=>'rollercoaster'
+		'bars-clubs-and-discos'=>array(
+			'icon'=>'cocktail'
 		),
-		'barber-shops-and-beauty-parlors'=>array(
-			'icon'=>'chair'
+		'bathhouses-and-spas'=>array(
+			'icon'=>'water'
 		),
-		'beaches-and-docks'=>array(
-			'icon'=>'beach'
-		),
-		'bowling-alleys-and-skating-rinks'=>array(
-			'icon'=>'bowling'
-		),
-		'country-clubs-and-golf-courses'=>array(
-			'icon'=>'golf'
-		),
-		'farms-and-country-homes'=>array(
-			'icon'=>'farm'
-		),
-		'garages-and-service-stations'=>array(
-			'icon'=>'gas-pump'
-		),
-		'hotels-and-tourist-homes'=>array(
-			'icon'=>'service-bell'
-		),
-		'lagoons-lakes-ponds-and-swimming-holes'=>array(
-			'icon'=>'buoy' // <== old slug
-		),
-		'lagoons-lakes-and-ponds'=>array( // <== new slug
-			'icon'=>'buoy'
-		),
-		'miscellaneous-services'=>array(
-			'icon'=>'book'
-		),
-		'music-clubs-and-night-clubs'=>array(
-			'icon'=>'saxophone'
-		),
-		'picnic-groves'=>array(
-			'icon'=>'picnic-table'
-		),
-		'ranches-and-riding-clubs'=>array(
-			'icon'=>'cowboy-hat'
-		),
-		'regional-parks'=>array(
-			'icon'=>'park'
-		),
-		'resorts'=>array(
+		'businesses-and-stores'=>array(
 			'icon'=>'hotel'
 		),
-		'restaurants-and-taverns'=>array(
+		'groups-and-organizations'=>array(
+			'icon'=>'people'
+		),
+		'events'=>array(
+			'icon'=>'calendar'
+		),
+		'meeting-places'=>array(
+			'icon'=>'signpost'
+		),
+		'media'=>array(
+			'icon'=>'newspaper'
+		),
+		'restaurants-and-cafes'=>array(
 			'icon'=>'utensils'
 		),
-		'summer-camps'=>array(
-			'icon'=>'campground'
-		),
-		'swimming-pools'=>array(
-			'icon'=>'swimming'
-		),
-		'theaters'=>array(
-			'icon'=>'theater'
+		'sports-teams'=>array(
+			'icon'=>'tennisball'
 		),
 		'_default'=>array(
 			'icon'=>'book'
@@ -133,19 +102,16 @@ function gbc_term_props($term, $prop='icon'){
 }
 
 // main list of location types with svg sprite icons
-function gbc_terms_list($html=null){
+function qc_terms_list($html=null){
 	$terms = get_terms(array(
 		'taxonomy' => 'location_types',
 		'hide_empty'=>true,
 	));
-	$html .= '<ul class="gbc-side-menu terms-menu">';
+	$html .= '<ul class="qc-side-menu terms-menu">';
 	foreach($terms as $term){
-		if($term->slug == 'all-green-book-locations'){
-			continue;
-		}
 		$html .= '<li class="'.$term->slug.'" id="term_'.$term->term_id.'">';
 			$html .= '<a href="/location-type/'.$term->slug.'/">';
-				$html .= gbc_sprite(gbc_term_props($term->slug)).$term->name;
+				$html .= qc_sprite(qc_term_props($term->slug)).$term->name;
 			$html .= '</a>';
 		$html .= '</li>';
 	}
@@ -154,16 +120,17 @@ function gbc_terms_list($html=null){
 }
 
 // primary term for the location post
-function gbc_get_post_term($id, $html = null){
+// set $first to return just one term
+function qc_get_post_term($id, $first=false, $html = null){
 	$terms = get_the_terms($id,'location_types');
 	if(is_array($terms)){
 		foreach($terms as $term){
-			if($term->slug == 'all-green-book-locations'){
-				continue;
-			}
-			$html .= '<a class="gbc-location-type-for-post" aria-label="Filed under: '.$term->name.'" href="/location-type/'.$term->slug.'" class="'.$term->slug.'">';
-			$html .= gbc_sprite(gbc_term_props($term->slug)).$term->name;
+			$html .= '<a class="qc-location-type-for-post" aria-label="Filed under: '.$term->name.'" href="/location-type/'.$term->slug.'" class="'.$term->slug.'">';
+			$html .= qc_sprite(qc_term_props($term->slug)).'<span>'.$term->name.'</span>';
 			$html .= '</a>';
+			if($first){
+				return $html;
+			}
 		}
 
 		return $html;
@@ -171,27 +138,41 @@ function gbc_get_post_term($id, $html = null){
 }
 
 // color location-type blocks for homepage
-function gbc_term_blocks($html = null){
-	$terms = get_terms(array(
-		'taxonomy' => 'location_types',
-		'hide_empty'=>true,
-	));
-	$html .= '<h2><a href="/locations">'.gbc_sprite('location').'Location Types</a></h2>';
-	$html .= '<div id="type-blocks-container-home">';
+function qc_term_blocks($postId=null,$containerId='type-blocks-container-home', $html = null){
+	if($postId){
+		$terms = get_the_terms($postId,'location_types');
+	}else{
+		$terms = get_terms(array(
+			'taxonomy' => 'location_types',
+			'hide_empty'=>true,
+		));
+		$html .= '<h2><a href="/locations">'.qc_sprite('location').'Location Types</a></h2>';
+	}
+	$html .= '<div id="'.$containerId.'">';
 	foreach($terms as $term):
-		if($term->slug == 'all-green-book-locations'){
-			continue;
-		}
 		$href = '/location-type/'.$term->slug;
-		$sprite = gbc_sprite(gbc_term_props($term->slug));
+		$sprite = qc_sprite(qc_term_props($term->slug));
 		$label = $term->name;
 		$html .= '<a class="location-type-block" href="'.$href.'">'.$sprite.'<h3>'.$label.'</h3></a>';
 	endforeach;
 	$html .= '</div>';
 	return $html;
 }
+// location post for home and archive pages
+function qc_post_location_item($html=null){
+	$html .= '<article class="post-location-item">';
+		$html .= '<a href="' . esc_url( get_permalink() ) . '" class="item-img"><img loading="lazy" src="'.get_the_post_thumbnail_url(get_the_ID(),'medium').'"></a>';
+		$html .= '<header class="entry-header">';
+			$html .= '<div class="entry-header-inner">';
+				$html .= '<h3><a href="' . esc_url( get_permalink() ) . '" rel="bookmark">'.get_the_title().'</a></h3>';
+				$html .= '<div class="meta">'.qc_get_post_term(get_the_ID()).'</div>';
+			$html .= '</div>';
+		$html .= '</header>';
+	$html .= '</article>';
+	return $html;
+}
 // get n recent locations for homepage
-function gbc_posts_recent($num=12,$html=null){
+function qc_posts_recent($num=12,$html=null){
 	$query = array(
 		'posts_per_page' => $num,
 		'post_status' => 'publish',
@@ -201,16 +182,10 @@ function gbc_posts_recent($num=12,$html=null){
 	);
 	$loop = new WP_Query( $query );
 	$html .= '<div class="type-container-home">';
-		$html .= '<h2><a href="/locations/">'.gbc_sprite('clock').'Recent Updates</a></h2>';
+		$html .= '<h2><a href="/locations/">'.qc_sprite('clock').'Recent Updates</a></h2>';
 		$html .= '<div class="articles-container-home">';
 		while ( $loop->have_posts() ) : $loop->the_post();
-			$html .= '<article class="post-location-item" style="--article-img:url('.get_the_post_thumbnail_url(get_the_ID(),'medium').');">';
-				$html .= '<header class="entry-header">';
-					$html .= '<div class="entry-header-inner">';
-						$html .= '<h3 class="entry-title-home"><a href="' . esc_url( get_permalink() ) . '" rel="bookmark">'.get_the_title().'</a></h3>';
-					$html .= '</div>';
-				$html .= '</header>';
-			$html .= '</article>';
+			$html .= qc_post_location_item();
 		endwhile;
 		$html .= '</div>';
 	$html .= '</div>';
@@ -218,15 +193,12 @@ function gbc_posts_recent($num=12,$html=null){
 	return $html;
 }
 // get n locations per type for homepage (unused but keeping it around)
-function gbc_posts_per_term($num=4,$html=null){	
+function qc_posts_per_term($num=4,$html=null){	
 	$terms = get_terms(array(
 		'taxonomy' => 'location_types',
 		'hide_empty'=>true,
 	));
 	foreach($terms as $term):
-		if($term->slug == 'all-green-book-locations'){
-			continue;
-		}
 		$query = array(
 			'posts_per_page' => $num,
 			'post_status'   => 'publish',
@@ -252,7 +224,7 @@ function gbc_posts_per_term($num=4,$html=null){
 			'orderby'   => array( 'meta_value_num' => 'DESC' ),
 		);
 		$loop = new WP_Query( $query );
-		$term_heading = '<a href="/location-type/'.$term->slug.'">'.gbc_sprite(gbc_term_props($term->slug)).$term->name.'</a>';
+		$term_heading = '<a href="/location-type/'.$term->slug.'">'.qc_sprite(qc_term_props($term->slug)).$term->name.'</a>';
 		$html .= '<div class="type-container-home '.$term->slug.'">';
 		$html .= '<h2>'.$term_heading.'</h2>';
 		$html .= '<div class="articles-container-home '.$term->slug.'">';
@@ -280,14 +252,15 @@ function gbc_posts_per_term($num=4,$html=null){
  * runs before the init hook. The init hook is too late for some features, such
  * as indicating support for post thumbnails.
  */
-function gbc_underscores_setup() {
+
+function qc_underscores_setup() {
 	/*
 		* Make theme available for translation.
 		* Translations can be filed in the /languages/ directory.
-		* If you're building a theme based on GBC Underscores, use a find and replace
-		* to change 'gbc-underscores' to the name of your theme in all the template files.
+		* If you're building a theme based on QC Underscores, use a find and replace
+		* to change 'qc-underscores' to the name of your theme in all the template files.
 		*/
-	load_theme_textdomain( 'gbc-underscores', get_template_directory() . '/languages' );
+	load_theme_textdomain( 'qc-underscores', get_template_directory() . '/languages' );
 
 	// Add default posts and comments RSS feed links to head.
 	add_theme_support( 'automatic-feed-links' );
@@ -310,8 +283,8 @@ function gbc_underscores_setup() {
 	// This theme uses wp_nav_menu() in one location.
 	register_nav_menus(
 		array(
-			'menu-1' => esc_html__( 'Partial (Header)', 'gbc-underscores' ),
-			'menu-2' => esc_html__( 'Full (Menu)', 'gbc-underscores' ),
+			'menu-1' => esc_html__( 'Partial (Header)', 'qc-underscores' ),
+			'menu-2' => esc_html__( 'Full (Menu)', 'qc-underscores' ),
 		)
 	);
 
@@ -336,7 +309,7 @@ function gbc_underscores_setup() {
 	add_theme_support(
 		'custom-background',
 		apply_filters(
-			'gbc_underscores_custom_background_args',
+			'qc_underscores_custom_background_args',
 			array(
 				'default-color' => 'ffffff',
 				'default-image' => '',
@@ -362,7 +335,7 @@ function gbc_underscores_setup() {
 		)
 	);
 }
-add_action( 'after_setup_theme', 'gbc_underscores_setup' );
+add_action( 'after_setup_theme', 'qc_underscores_setup' );
 
 /**
  * Set the content width in pixels, based on the theme's design and stylesheet.
@@ -371,22 +344,22 @@ add_action( 'after_setup_theme', 'gbc_underscores_setup' );
  *
  * @global int $content_width
  */
-function gbc_underscores_content_width() {
-	$GLOBALS['content_width'] = apply_filters( 'gbc_underscores_content_width', 640 );
+function qc_underscores_content_width() {
+	$GLOBALS['content_width'] = apply_filters( 'qc_underscores_content_width', 640 );
 }
-add_action( 'after_setup_theme', 'gbc_underscores_content_width', 0 );
+add_action( 'after_setup_theme', 'qc_underscores_content_width', 0 );
 
 /**
  * Register widget area.
  *
  * @link https://developer.wordpress.org/themes/functionality/sidebars/#registering-a-sidebar
  */
-function gbc_underscores_widgets_init() {
+function qc_underscores_widgets_init() {
 	register_sidebar(
 		array(
-			'name'          => esc_html__( 'Sidebar', 'gbc-underscores' ),
+			'name'          => esc_html__( 'Sidebar', 'qc-underscores' ),
 			'id'            => 'sidebar-1',
-			'description'   => esc_html__( 'Add widgets here.', 'gbc-underscores' ),
+			'description'   => esc_html__( 'Add widgets here.', 'qc-underscores' ),
 			'before_widget' => '<section id="%1$s" class="widget %2$s">',
 			'after_widget'  => '</section>',
 			'before_title'  => '<h2 class="widget-title">',
@@ -394,22 +367,22 @@ function gbc_underscores_widgets_init() {
 		)
 	);
 }
-add_action( 'widgets_init', 'gbc_underscores_widgets_init' );
+add_action( 'widgets_init', 'qc_underscores_widgets_init' );
 
 /**
  * Enqueue scripts and styles.
  */
-function gbc_underscores_scripts() {
-	wp_enqueue_style( 'gbc-underscores-style', get_stylesheet_uri(), array(), _GBC_VERSION );
-	wp_style_add_data( 'gbc-underscores-style', 'rtl', 'replace' );
+function qc_underscores_scripts() {
+	wp_enqueue_style( 'qc-underscores-style', get_stylesheet_uri(), array(), _QC_VERSION );
+	wp_style_add_data( 'qc-underscores-style', 'rtl', 'replace' );
 
-	wp_enqueue_script( 'gbc-underscores-navigation', get_template_directory_uri() . '/js/navigation.js', array(), _GBC_VERSION, true );
+	wp_enqueue_script( 'qc-underscores-navigation', get_template_directory_uri() . '/js/navigation.js', array(), _QC_VERSION, true );
 
 	if ( is_singular() && comments_open() && get_option( 'thread_comments' ) ) {
 		wp_enqueue_script( 'comment-reply' );
 	}
 }
-add_action( 'wp_enqueue_scripts', 'gbc_underscores_scripts' );
+add_action( 'wp_enqueue_scripts', 'qc_underscores_scripts' );
 
 /**
  * Implement the Custom Header feature.

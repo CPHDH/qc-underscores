@@ -9,7 +9,7 @@
  *
  * @link https://developer.wordpress.org/themes/basics/template-hierarchy/
  *
- * @package GBC_Underscores
+ * @package QC_Underscores
  */
 
 get_header();

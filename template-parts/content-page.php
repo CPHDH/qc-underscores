@@ -4,7 +4,7 @@
  *
  * @link https://developer.wordpress.org/themes/basics/template-hierarchy/
  *
- * @package GBC_Underscores
+ * @package QC_Underscores
  */
 
 ?>
@@ -15,7 +15,7 @@
 		<?php the_title( '<h1 class="entry-title">', '</h1>' ); ?>
 		<div class="entry-meta">
 			<?php
-			gbc_underscores_posted_by();
+			qc_underscores_posted_by();
 			?>
 		</div><!-- .entry-meta -->
 	</header><!-- .entry-header -->
@@ -27,7 +27,7 @@
 
 		wp_link_pages(
 			array(
-				'before' => '<div class="page-links">' . esc_html__( 'Pages:', 'gbc-underscores' ),
+				'before' => '<div class="page-links">' . esc_html__( 'Pages:', 'qc-underscores' ),
 				'after'  => '</div>',
 			)
 		);

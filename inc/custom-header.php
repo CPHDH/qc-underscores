@@ -8,39 +8,39 @@
  *
  * @link https://developer.wordpress.org/themes/functionality/custom-headers/
  *
- * @package GBC_Underscores
+ * @package QC_Underscores
  */
 
 /**
  * Set up the WordPress core custom header feature.
  *
- * @uses gbc_underscores_header_style()
+ * @uses qc_underscores_header_style()
  */
-function gbc_underscores_custom_header_setup() {
+function qc_underscores_custom_header_setup() {
 	add_theme_support(
 		'custom-header',
 		apply_filters(
-			'gbc_underscores_custom_header_args',
+			'qc_underscores_custom_header_args',
 			array(
 				'default-image'      => '',
 				'default-text-color' => '000000',
 				'width'              => 1000,
 				'height'             => 250,
 				'flex-height'        => true,
-				'wp-head-callback'   => 'gbc_underscores_header_style',
+				'wp-head-callback'   => 'qc_underscores_header_style',
 			)
 		)
 	);
 }
-add_action( 'after_setup_theme', 'gbc_underscores_custom_header_setup' );
+add_action( 'after_setup_theme', 'qc_underscores_custom_header_setup' );
 
-if ( ! function_exists( 'gbc_underscores_header_style' ) ) :
+if ( ! function_exists( 'qc_underscores_header_style' ) ) :
 	/**
 	 * Styles the header image and text displayed on the blog.
 	 *
-	 * @see gbc_underscores_custom_header_setup().
+	 * @see qc_underscores_custom_header_setup().
 	 */
-	function gbc_underscores_header_style() {
+	function qc_underscores_header_style() {
 		$header_text_color = get_header_textcolor();
 
 		/*

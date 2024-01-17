@@ -4,7 +4,7 @@
  *
  * @link https://developer.wordpress.org/themes/basics/template-hierarchy/#search-result
  *
- * @package GBC_Underscores
+ * @package QC_Underscores
  */
 
 get_header();
@@ -18,18 +18,19 @@ get_header();
 				<h1 class="page-title">
 					<?php
 					/* translators: %s: search query. */
-					printf( esc_html__( 'Search Results for: %s', 'gbc-underscores' ), '<span>' . get_search_query() . '</span>' );
+					printf( esc_html__( 'Search Results for: %s', 'qc-underscores' ), '<span>' . get_search_query() . '</span>' );
 					?>
 				</h1>
 			</header><!-- .page-header -->
 
-			<div id="gbc-archive-items">
+			<div id="qc-archive-items">
 				<?php
 				/* Start the Loop */
 				while ( have_posts() ) :
 					the_post();
 					get_template_part( 'template-parts/content', 'search' );
 				endwhile;?>
+				<article class="post-location-item spacer"></article>
 			</div>
 
 			<?php the_posts_navigation(array('prev_text'=>'Next','next_text'=>'Previous'));
@@ -44,5 +45,5 @@ get_header();
 	</main><!-- #main -->
 
 <?php
-get_sidebar();
+//get_sidebar();
 get_footer();

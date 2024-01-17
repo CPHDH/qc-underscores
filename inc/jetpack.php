@@ -4,7 +4,7 @@
  *
  * @link https://jetpack.com/
  *
- * @package GBC_Underscores
+ * @package QC_Underscores
  */
 
 /**
@@ -14,14 +14,15 @@
  * See: https://jetpack.com/support/responsive-videos/
  * See: https://jetpack.com/support/content-options/
  */
-function gbc_underscores_jetpack_setup() {
+function qc_underscores_jetpack_setup() {
 	// Add theme support for Infinite Scroll.
 	add_theme_support(
 		'infinite-scroll',
 		array(
-			'container' => 'main',
-			'render'    => 'gbc_underscores_infinite_scroll_render',
-			'footer'    => 'page',
+			'container' => 'qc-archive-items',
+			'render'    => 'qc_underscores_infinite_scroll_render',
+			'footer'    => false,
+			'wrapper'	=> false,
 		)
 	);
 
@@ -33,7 +34,7 @@ function gbc_underscores_jetpack_setup() {
 		'jetpack-content-options',
 		array(
 			'post-details' => array(
-				'stylesheet' => 'gbc-underscores-style',
+				'stylesheet' => 'qc-underscores-style',
 				'date'       => '.posted-on',
 				'categories' => '.cat-links',
 				'tags'       => '.tags-links',
@@ -48,19 +49,19 @@ function gbc_underscores_jetpack_setup() {
 		)
 	);
 }
-add_action( 'after_setup_theme', 'gbc_underscores_jetpack_setup' );
+add_action( 'after_setup_theme', 'qc_underscores_jetpack_setup' );
 
-if ( ! function_exists( 'gbc_underscores_infinite_scroll_render' ) ) :
+if ( ! function_exists( 'qc_underscores_infinite_scroll_render' ) ) :
 	/**
 	 * Custom render function for Infinite Scroll.
 	 */
-	function gbc_underscores_infinite_scroll_render() {
+	function qc_underscores_infinite_scroll_render() {
 		while ( have_posts() ) {
 			the_post();
 			if ( is_search() ) :
 				get_template_part( 'template-parts/content', 'search' );
 			else :
-				get_template_part( 'template-parts/content', get_post_type() );
+				get_template_part( 'template-parts/archive', get_post_type() );
 			endif;
 		}
 	}
