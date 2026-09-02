@@ -477,11 +477,25 @@ article .entry-content > ul li::before {
 ol {
   list-style: decimal;
 }
-ol.comment-list {
+ol.comment-list,
+ol.comment-list ol{
   list-style: none;
+}
+ol.comment-list {
   padding-left: 0;
 }
-
+.comment-author.vcard{
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  margin-bottom: 0.25lh;
+}
+.comment-author.vcard > *{
+  margin-right: 4px;
+}
+.comment-author.vcard img{
+  margin-right: 10px;
+}
 li > ul,
 li > ol {
   margin-bottom: 0;
@@ -762,6 +776,10 @@ textarea {
 .comment-content a {
   word-wrap: break-word;
   overflow-wrap: break-word;
+}
+
+li.comment + li.comment {
+  margin-top: 1lh;
 }
 
 .bypostauthor {
@@ -1345,6 +1363,7 @@ h6,
 h6 a,
 .nav-links a {
   color: var(--dark);
+  text-wrap: balance;
 }
 header a {
   color: var(--night);
@@ -1548,6 +1567,12 @@ header a {
 .leaflet-marker-icon path#color{
   fill: var(--dark);
 }
+.leaflet-control-attribution a{
+  color: var(--night);
+  .leaflet-attribution-flag {
+    display: none !important;
+  }
+}
 #circle, #color {
   stroke: rgba(var(--tint-alt-rgb), .9) !important;
 }
@@ -1667,6 +1692,7 @@ a.location-type-block {
   justify-content: flex-start;
   flex-wrap: wrap;
   margin-right: -1em;
+  gap: 1em;
 }
 a.location-type-block {
   background: var(--dark);
@@ -1678,9 +1704,8 @@ a.location-type-block {
   flex-direction: column;
   justify-content: center;
 }
-#type-blocks-container-home a.location-type-block{
+#type-blocks-container-home a.location-type-block {
   width: calc(20% - 1em);
-  margin: 0 1em 1em 0;
 }
 @media all and (max-width: 1050px) {
   #type-blocks-container-home a.location-type-block {
@@ -2047,6 +2072,7 @@ section.post_tags {
 
 /* No Byline on select pages
 --------------------------------------------- */
+.post-3 .byline,
 .post-19 .byline,
 .post-21 .byline {
   display: none;

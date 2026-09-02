@@ -161,7 +161,7 @@ function qc_term_blocks($postId=null,$containerId='type-blocks-container-home', 
 // location post for home and archive pages
 function qc_post_location_item($html=null){
 	$html .= '<article class="post-location-item">';
-		$html .= '<a href="' . esc_url( get_permalink() ) . '" class="item-img"><img loading="lazy" src="'.get_the_post_thumbnail_url(get_the_ID(),'medium').'"></a>';
+		$html .= '<a aria-label="'.get_the_title().'" href="' . esc_url( get_permalink() ) . '" class="item-img"><img alt="" loading="lazy" src="'.get_the_post_thumbnail_url(get_the_ID(),'medium').'"></a>';
 		$html .= '<header class="entry-header">';
 			$html .= '<div class="entry-header-inner">';
 				$html .= '<h3><a href="' . esc_url( get_permalink() ) . '" rel="bookmark">'.get_the_title().'</a></h3>';

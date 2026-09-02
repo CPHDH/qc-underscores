@@ -27,8 +27,8 @@
 	<div id="qc-top-bar">
 		<a id="sponsor" href="https://csudigitalhumanities.org"><?php echo qc_sprite('cphdh');?> CSU <span>Center for Public History + </span>Digital Humanities</a>
 		<span>
-			<a aria-label="Visit Twitter/X page" href="https://twitter.com/cphdh"><?php echo qc_sprite('twitter');?></a>
-			<a aria-label="Visit Facebook page" href="https://www.facebook.com/pages/Center-for-Public-History-Digital-Humanities/127852890600375"><?php echo qc_sprite('facebook');?></a>
+			<a aria-label="Visit Bluesky page" href="https://bsky.app/profile/cphdh.bsky.social"><?php echo qc_sprite('bluesky');?></a>
+			<a aria-label="Visit Facebook page" href="https://www.facebook.com/csudigitalhumanities/"><?php echo qc_sprite('facebook');?></a>
 			<a aria-label="Visit YouTube channel" href="https://www.youtube.com/user/csudigitalhumanities"><?php echo qc_sprite('youtube');?></a>
 			<a aria-label="Send us an email" href="mailto:info@queerclevelandhistories.org"><?php echo qc_sprite('email');?></a>
 		</span>
